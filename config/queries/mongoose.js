@@ -44,8 +44,10 @@ module.exports = {
         throw error;
       });
 
+    // Transform to JSON object.
     const entry = request.toJSON ? request.toJSON() : request;
 
+    // Extract relations.
     const relations = this.associations.reduce((acc, association) => {
       if (params.values[association.alias]) {
         acc[association.alias] = params.values[association.alias];
@@ -54,12 +56,17 @@ module.exports = {
       return acc;
     }, {});
 
-    return module.exports.update.call(this, {
-      [this.primaryKey]: entry[this.primaryKey],
-      values: _.assign({
-        id: entry[this.primaryKey]
-      }, relations)
-    });
+    // Create relationships.
+    return strapi.hook[this.orm].manageRelations(this, _.assign({
+      id: entry[this.primaryKey]
+    }, relations));
+
+    // return module.exports.update.call(this, {
+    //   [this.primaryKey]: entry[this.primaryKey],
+    //   values: _.assign({
+    //     id: entry[this.primaryKey]
+    //   }, relations)
+    // });
   },
 
   update: async function (params) {
