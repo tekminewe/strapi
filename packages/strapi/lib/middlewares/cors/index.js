@@ -9,7 +9,7 @@
  */
 
 const defaults = require('./defaults.json');
-const kcors = require('kcors');
+const cors = require('@koa/cors');
 
 module.exports = strapi => {
   return {
@@ -20,7 +20,7 @@ module.exports = strapi => {
     initialize() {
       strapi.app.use(async (ctx, next) => {
         if (ctx.request.admin) {
-          return kcors({
+          return cors({
             origin: '*',
             exposeHeaders: defaults.cors.expose,
             maxAge: defaults.cors.maxAge,
@@ -30,7 +30,7 @@ module.exports = strapi => {
             keepHeadersOnError: defaults.cors.keepHeadersOnError,
           })(ctx, next);
         } else if (strapi.config.currentEnvironment.security.cors.enabled) {
-          return kcors({
+          return cors({
             origin: function(ctx) {
               const whitelist = strapi.config.middleware.settings.cors.origin.split(
                 /\s*,\s*/
