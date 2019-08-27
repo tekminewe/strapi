@@ -6,6 +6,62 @@ const _ = require('lodash');
  * A set of functions called "actions" for `ContentManager`
  */
 
+// const populateDatas = async jobs => {
+//   const jobRequirements = await strapi.plugins['content-manager']
+//     .queries('jobrequirement')
+//     .find({}, undefined);
+//   const jobRequirementMap = new Map();
+//   jobRequirements.forEach(jobRequirement => {
+//     jobRequirementMap.set(jobRequirement.id, jobRequirement);
+//   });
+
+//   const jobFunctions = await strapi.plugins['content-manager']
+//     .queries('jobfunction')
+//     .find({}, undefined);
+//   const jobFunctionMap = new Map();
+//   jobFunctions.forEach(jobFunction => {
+//     jobFunctionMap.set(jobFunction.id, jobFunction);
+//   });
+
+//   jobs = jobs.map(job => {
+//     job.jobFunctions = job.jobFunctions.map(jobFunction => {
+//       return jobFunctionMap.get(jobFunction);
+//     });
+
+//     job.jobRequirements = job.jobRequirements.map(jobRequirement => {
+//       return jobRequirementMap.get(jobRequirement);
+//     });
+//     return job;
+//   });
+
+//   return jobs;
+// };
+
+const populateData = async job => {
+  const jobRequirements = await strapi.plugins['content-manager']
+    .queries('jobrequirement')
+    .find(
+      {
+        _id_in: job.jobRequirements,
+      },
+      undefined
+    );
+
+  const jobFunctions = await strapi.plugins['content-manager']
+    .queries('jobfunction')
+    .find(
+      {
+        _id_in: job.jobFunctions,
+      },
+      undefined
+    );
+
+  job.jobRequirements = jobRequirements.map(jR => ` ${jR.name} `);
+  job.jobFunctions = jobFunctions.map(jF => ` ${jF.name} `);
+
+  return job;
+};
+
 /* eslint-disable indent */
 module.exports = {
   fetchAll: async (params, query) => {
@@ -59,7 +115,7 @@ module.exports = {
   },
 
   fetch: async (params, source, populate, raw = true) => {
-    return await strapi.plugins['content-manager']
+    let result = await strapi.plugins['content-manager']
       .queries(params.model, source)
       .findOne(
         {
@@ -68,6 +124,12 @@ module.exports = {
         populate,
         raw
       );
+
+    if (params.model === 'job') {
+      result = await populateData(result);
+    }
+
+    return result;
   },
 
   add: async (params, values, source) => {

@@ -139,7 +139,10 @@ class Edit extends React.PureComponent {
         customBootstrapClass={className}
         customInputs={{ json: InputJSONWithErrors, wysiwyg: WysiwygWithErrors }}
         didCheckErrors={this.props.didCheckErrors}
-        disabled={!get(details, 'editable', true)}
+        disabled={
+          !get(details, 'editable', true) ||
+          Array.isArray(this.props.record[attr])
+        }
         errors={this.getInputErrors(attr)}
         inputDescription={inputDescription}
         inputStyle={inputStyle}
