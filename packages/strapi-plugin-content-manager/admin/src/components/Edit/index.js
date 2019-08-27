@@ -42,9 +42,10 @@ const getInputType = (type = '') => {
     case 'json':
       return 'json';
     default:
-      return 'textarea';
+      return 'text';
   }
 };
+
 class Edit extends React.PureComponent {
   getInputErrors = attr => {
     const index = findIndex(this.props.formErrors, ['name', attr]);
