@@ -42,7 +42,7 @@ const getInputType = (type = '') => {
     case 'json':
       return 'json';
     default:
-      return 'text';
+      return 'textarea';
   }
 };
 
@@ -68,7 +68,7 @@ class Edit extends React.PureComponent {
 
         return acc;
       },
-      {},
+      {}
     );
   };
 
