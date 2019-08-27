@@ -56,8 +56,8 @@ const populateData = async job => {
       undefined
     );
 
-  job.jobRequirements = jobRequirements.map(jR => ` ${jR.name} `);
-  job.jobFunctions = jobFunctions.map(jF => ` ${jF.name} `);
+  job.jobRequirements = jobRequirements;
+  job.jobFunctions = jobFunctions;
 
   return job;
 };

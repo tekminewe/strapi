@@ -41,6 +41,8 @@ const getInputType = (type = '') => {
       return 'file';
     case 'json':
       return 'json';
+    case 'array':
+      return 'textarea';
     default:
       return 'text';
   }
@@ -133,6 +135,13 @@ class Edit extends React.PureComponent {
       className = 'col-md-4';
     }
 
+    let value = this.props.record[attr];
+    if (this.props.modelName === 'job') {
+      if (Array.isArray(value)) {
+        value = value.map(v => ` ${v.name} `);
+      }
+    }
+
     return (
       <Input
         autoFocus={key === 0}
@@ -157,7 +166,7 @@ class Edit extends React.PureComponent {
         selectOptions={get(this.props.attributes, [attr, 'enum'])}
         type={type}
         validations={this.getInputValidations(attr)}
-        value={this.props.record[attr]}
+        value={value}
       />
     );
   };
@@ -194,6 +203,7 @@ Edit.propTypes = {
   record: PropTypes.object,
   resetProps: PropTypes.bool,
   schema: PropTypes.object,
+  modelName: PropTypes.string,
 };
 
 export default Edit;
