@@ -45,7 +45,6 @@ const getInputType = (type = '') => {
       return 'textarea';
   }
 };
-
 class Edit extends React.PureComponent {
   getInputErrors = attr => {
     const index = findIndex(this.props.formErrors, ['name', attr]);
