@@ -204,6 +204,7 @@ module.exports = {
         values.fields.jobFunctions = JSON.parse(values.fields.jobFunctions).map(
           jF => jF._id
         );
+        values.fields.postedDate = new Date().toISOString();
       }
 
       // Silent recursive parser.
