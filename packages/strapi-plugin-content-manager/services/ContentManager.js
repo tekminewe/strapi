@@ -197,6 +197,15 @@ module.exports = {
   edit: async (params, values, source) => {
     // Multipart/form-data.
     if (values.hasOwnProperty('fields') && values.hasOwnProperty('files')) {
+      if (params.model === 'job') {
+        values.fields.jobRequirements = JSON.parse(
+          values.fields.jobRequirements
+        ).map(jR => jR._id);
+        values.fields.jobFunctions = JSON.parse(values.fields.jobFunctions).map(
+          jF => jF._id
+        );
+      }
+
       // Silent recursive parser.
       const parser = value => {
         try {
